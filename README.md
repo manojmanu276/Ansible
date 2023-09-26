@@ -24,3 +24,7 @@ ansible-playbook  playbook-name --list-tags
 ```
 ansible-playbook playbook-name --skip-tags "tag1, tag3"
 ```
+## Ansible command to list the core modules
+```
+ansible -doc -l
+```
