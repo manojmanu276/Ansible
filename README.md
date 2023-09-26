@@ -14,4 +14,4 @@ ansible-playbook playbook-name --list-hosts
 ansible-playbook  playbook-name --list-tags
 
 ## Ansible command to skip certain steps/tasks included in playbook
-ansible-playbook playbook-nae --skip-tags "tag1, tag3" 
+ansible-playbook playbook-name --skip-tags "tag1, tag3" 
