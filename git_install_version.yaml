@@ -1,16 +1,16 @@
 ---
-- hosts: all
-  become: true
+- hosts: all    #Here you have to include particular ip address, group name of your ip addresses in which you want execute this playbook. Simply using "all" executes the playbook in all servers configured under /etc/ansible/hosts
+  become: true  #similar to sudo command in linux, provides root user access to other users
   tasks: 
   - name: get the git version
-    shell: git --version 
+    shell: git --version  #shell module in ansible is used to execute unix commands in list of configured servers in /etc/ansible/hosts
     ignore_errors: yes
   - name: Display the git version
-    when: gitVersion.stdout == ""
-    debug:
+    when: gitVersion.stdout == ""  #when condition in ansible is used when you have to execute a task only if a certain condition is met
+    debug:                         #debug module in ansible is used to display the message in the console
       msg: "Git is not installed"
   - name: install git
-    yum:
+    yum:                           #yum module in ansible is used to install packages
      name: git
      state: latest
   - name: Display the git version
