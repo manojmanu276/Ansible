@@ -2,7 +2,9 @@
 This repository contains few important ansible  playbooks required for software provisioning and configuration management
 
 ## Ansible command to run playbook
-ansible-playbook playbook-name 
+```
+ansible-playbook playbook-name
+```
 
 ## Ansible command to perform dry run on the playbook without making any actual changes
 ansible-playbook playbook-name --check
