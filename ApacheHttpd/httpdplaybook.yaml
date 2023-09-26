@@ -1,0 +1,23 @@
+---
+- hosts: all                           #here you can mention individual ip address of the configured server, group name or simply "all"(all will execute the current playbook in all configured hosts in /etc/ansible/hosts) 
+  become: true                         #become basically works like sudo command in linux, gives root user permissions to other users
+  tasks:                               #contains list of tasks to be executed in configured server
+  - name: install apache httpd server
+    tags:                              #tags serve as label to each stage in the list of tasks
+    - install
+    yum:                               #yum module in ansible is used to install packages
+      name: httpd
+      state: latest
+  - name: start the apache httpd server
+    tags:
+    - start
+    service:                           #service module in ansible is used to enable state of a service-start,stop or restart
+       name: httpd
+       state: started
+  - name: copy index.html
+    tags:
+    - copy
+    copy:                             #copy module in ansible is used to copy certain file from source to destination path
+      src: index.html
+      dest: /var/www/html/index.html  #/var/www/html is the default path of apache httpd web server
+...
