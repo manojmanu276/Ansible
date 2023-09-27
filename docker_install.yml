@@ -1,0 +1,37 @@
+---
+- hosts: app-servers                          #here i am including all the configured servers grouped under the name [app-servers] in /etc/ansible/hosts
+  become: true                                #similar to sudo in unix, provides root user permissions 
+  tasks:
+  - name: install dependencies
+    apt: name="{{item}}" , state=present , update_cache=yes
+    with_items:
+    - curl
+    - gnupg-agent                              #gpg-agent is a daemon to manage secret (private) keys independently from any protocol
+    - ca-certificates                          
+    - apt-transport-https                      #this dependency allows use of repositories that can be accessed via HTTPS protocol
+    - software-properties-common               #this package provides an abstraction of used apt-repositories
+  - name: installing docker's official GPG key
+    apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+  - name: adding repository to apt-sources
+    apt_repository:
+      repo: deb https://download.docker.com/linux/ubuntu bionic stable
+  - name: installing docker
+    apt: name="{{item}}" , state=present, update_cache=yes
+    with_items:
+    - docker-ce
+    - docker-cli
+    - containerd.io
+  - name: start the docker service
+    service:
+      name: docker
+      state: started
+      enabled: yes
+  - name: adding ubuntu user to docker group 
+    shell: usermod -aG docker ubuntu
+  - name: restart the sshd service
+    service:
+      name: sshd
+      state: restarted
+...
