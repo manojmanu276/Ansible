@@ -1,0 +1,40 @@
+---
+- hosts: [jenkins-server]    #server where i need to install jenkins is configured by name [jenkins-server] under /etc/ansible/hosts
+  become: true
+  tasks:
+  - name: installing dependencies
+    yum:
+     name: wget
+     state: latest
+     update_cache: yes
+  - name: adding jenkins repository
+    yum_repository:
+      name: jenkins
+      url: /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+      gpgcheck: yes
+      gpgkey: https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+  - name: install java
+    yum:
+      name: fontconfig java-11-openjdk
+      state: latest
+  - name: install jenkins
+    yum:
+      name: jenkins
+      state: latest
+  - name: enable jenkins service
+    service:
+      name: jenkins
+      state: enabled
+  - name: check whether jenkins service is started or not
+    service:
+      name: jenkins
+      state: status
+    notify:
+    - restart jenkins
+  handlers:
+  - name: restart jenkins
+    service:
+      name: jenkins
+      state: restarted
+...
+
