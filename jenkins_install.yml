@@ -2,18 +2,18 @@
 - hosts: [jenkins-server]    #server where i need to install jenkins is configured by name [jenkins-server] under /etc/ansible/hosts
   become: true
   tasks:
-  - name: installing dependencies
+  - name: installing dependencies   # Install the wget tool in your operating system to fetch the Jenkins repository
     yum:
      name: wget
      state: latest
      update_cache: yes
-  - name: adding jenkins repository
-    yum_repository:
+  - name: adding jenkins repository   # To install Jenkins on to your operating system, follow the latest documentation by jenkins.
+    yum_repository:                   # At the time of writing, you first need to configure yum by adding the Jenkins repository and then import the repository GPG key
       name: jenkins
       url: /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
       gpgcheck: yes
       gpgkey: https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
-  - name: install java
+  - name: install java                # Java needs to be installed and configured on the server on which you want to configure Jenkins. OpenJDK is preferred with Jenkins, but you can also use any other version of Java.
     yum:
       name: fontconfig java-11-openjdk
       state: latest
@@ -31,7 +31,7 @@
       state: status
     notify:
     - restart jenkins
-  handlers:
+  handlers:                          # handlers are special tasks executed at the end of the playbook if notified by other tasks.
   - name: restart jenkins
     service:
       name: jenkins
