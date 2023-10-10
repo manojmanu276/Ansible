@@ -1,0 +1,36 @@
+---
+- name: Update Jenkins
+  hosts: [jenkins-server]     # the server where old version of jenkins is configured under /etc/ansible/hosts under the name [jenkins-server]
+  become: true
+  tasks:
+    - name: Stop Jenkins service
+      service:
+        name: jenkins
+        state: stopped
+    
+    - name: rename the old version jenkins.war file
+      command: mv /var/lib/jenkins/jenkins.war /var/lib/jenkins/jenkins-old.war  #renaming the jenkins.war(running current version) to jenkins-old.war
+
+    - name: Download Jenkins WAR file
+      get_url:
+        url: "https://updates.jenkins.io/download/war/2.426/jenkins.war" # set the verion-number variable to the desired Jenkins version
+        dest: /var/lib/jenkins/jenkins.war
+      register: download_result
+
+    - name: enable jenkins service
+      service: 
+        name: jenkins
+        state: enabled
+   
+    - name: Start Jenkins service
+      service:
+        name: jenkins
+        state: started
+      when: download_result.changed
+
+    - name: check the status of jenkins-server
+      service: 
+        name: jenkins  
+        state: status                
+...   
+      
